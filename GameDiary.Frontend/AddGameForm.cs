@@ -5,6 +5,7 @@
         public string GameTitle { get; private set; } = "";
         public string Platform { get; private set; } = "";
         public string Status { get; private set; } = "";
+        public int Rating { get; private set; } = 5;
 
         public AddGameForm()
         {
@@ -13,7 +14,7 @@
             cmbPlatform.Items.AddRange(new[] { "PC", "PS5", "PS4", "Xbox", "Nintendo Switch" });
             cmbPlatform.SelectedIndex = 0;
 
-            cmbStatus.Items.AddRange(new[] { "Playing", "Done", "Dropped", "Wishlist" });
+            cmbStatus.Items.AddRange(new[] { "В процессе", "Пройдена", "Брошена", "Вишлист" });
             cmbStatus.SelectedIndex = 0;
         }
 
@@ -27,7 +28,8 @@
 
             GameTitle = txtTitle.Text;
             Platform = cmbPlatform.SelectedItem?.ToString() ?? "PC";
-            Status = cmbStatus.SelectedItem?.ToString() ?? "Playing";
+            Status = cmbStatus.SelectedItem?.ToString() ?? "В процессе";
+            Rating = (int)nudRating.Value;
 
             DialogResult = DialogResult.OK;
             Close();
@@ -55,6 +57,16 @@
         }
 
         private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
         {
 
         }

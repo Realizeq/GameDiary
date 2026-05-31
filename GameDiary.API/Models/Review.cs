@@ -8,6 +8,6 @@
         public string? Comment { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public Game Game { get; set; } = null!;
+        public Game? Game { get; set; }
     }
 }

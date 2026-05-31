@@ -36,6 +36,9 @@
             cmbStatus = new ComboBox();
             btnOk = new Button();
             btnCancel = new Button();
+            label4 = new Label();
+            nudRating = new NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)nudRating).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -51,16 +54,17 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 88);
+            label2.Location = new Point(12, 79);
             label2.Name = "label2";
             label2.Size = new Size(72, 15);
             label2.TabIndex = 1;
             label2.Text = "Платформа";
+            label2.Click += label2_Click;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 139);
+            label3.Location = new Point(12, 108);
             label3.Name = "label3";
             label3.Size = new Size(43, 15);
             label3.TabIndex = 2;
@@ -77,17 +81,17 @@
             // cmbPlatform
             // 
             cmbPlatform.FormattingEnabled = true;
-            cmbPlatform.Location = new Point(117, 85);
+            cmbPlatform.Location = new Point(117, 76);
             cmbPlatform.Name = "cmbPlatform";
-            cmbPlatform.Size = new Size(121, 23);
+            cmbPlatform.Size = new Size(184, 23);
             cmbPlatform.TabIndex = 4;
             // 
             // cmbStatus
             // 
             cmbStatus.FormattingEnabled = true;
-            cmbStatus.Location = new Point(117, 136);
+            cmbStatus.Location = new Point(117, 105);
             cmbStatus.Name = "cmbStatus";
-            cmbStatus.Size = new Size(121, 23);
+            cmbStatus.Size = new Size(184, 23);
             cmbStatus.TabIndex = 5;
             // 
             // btnOk
@@ -98,7 +102,7 @@
             btnOk.TabIndex = 6;
             btnOk.Text = "Добавить";
             btnOk.UseVisualStyleBackColor = true;
-            btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            btnOk.Click += btnOk_Click;
             // 
             // btnCancel
             // 
@@ -108,13 +112,35 @@
             btnCancel.TabIndex = 7;
             btnCancel.Text = "Отмена";
             btnCancel.UseVisualStyleBackColor = true;
-            btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(12, 140);
+            label4.Name = "label4";
+            label4.Size = new Size(82, 15);
+            label4.TabIndex = 8;
+            label4.Text = "Оценка (1-10)";
+            label4.Click += label4_Click;
+            // 
+            // nudRating
+            // 
+            nudRating.Location = new Point(117, 138);
+            nudRating.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
+            nudRating.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            nudRating.Name = "nudRating";
+            nudRating.Size = new Size(96, 23);
+            nudRating.TabIndex = 9;
+            nudRating.Value = new decimal(new int[] { 5, 0, 0, 0 });
             // 
             // AddGameForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(621, 288);
+            Controls.Add(nudRating);
+            Controls.Add(label4);
             Controls.Add(btnCancel);
             Controls.Add(btnOk);
             Controls.Add(cmbStatus);
@@ -125,6 +151,7 @@
             Controls.Add(label1);
             Name = "AddGameForm";
             Text = "AddGameForm";
+            ((System.ComponentModel.ISupportInitialize)nudRating).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -139,5 +166,7 @@
         private ComboBox cmbStatus;
         private Button btnOk;
         private Button btnCancel;
+        private Label label4;
+        private NumericUpDown nudRating;
     }
 }

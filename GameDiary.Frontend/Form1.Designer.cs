@@ -41,7 +41,7 @@
             dgvGames.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvGames.Location = new Point(12, 41);
             dgvGames.Name = "dgvGames";
-            dgvGames.Size = new Size(597, 241);
+            dgvGames.Size = new Size(679, 241);
             dgvGames.TabIndex = 0;
             // 
             // btnAdd
@@ -56,7 +56,7 @@
             // 
             // btnDelete
             // 
-            btnDelete.Location = new Point(534, 288);
+            btnDelete.Location = new Point(616, 288);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(75, 23);
             btnDelete.TabIndex = 2;
@@ -66,7 +66,7 @@
             // 
             // btnRefresh
             // 
-            btnRefresh.Location = new Point(487, 12);
+            btnRefresh.Location = new Point(569, 12);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(122, 23);
             btnRefresh.TabIndex = 3;
@@ -88,7 +88,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(703, 330);
+            ClientSize = new Size(746, 330);
             Controls.Add(btnRefresh);
             Controls.Add(btnDelete);
             Controls.Add(btnAdd);

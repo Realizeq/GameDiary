@@ -43,6 +43,32 @@ namespace GameDiary.Frontend
                 if (dgvGames.Columns["AddedAt"] != null) dgvGames.Columns["AddedAt"].HeaderText = "Добавлена";
                 if (dgvGames.Columns["CoverImageUrl"] != null) dgvGames.Columns["CoverImageUrl"].Visible = false;
                 if (dgvGames.Columns["Reviews"] != null) dgvGames.Columns["Reviews"].Visible = false;
+
+                // Добавляем колонку оценки если её нет
+                if (!dgvGames.Columns.Contains("Оценка"))
+                {
+                    var ratingColumn = new DataGridViewTextBoxColumn();
+                    ratingColumn.Name = "Оценка";
+                    ratingColumn.HeaderText = "Оценка";
+                    dgvGames.Columns.Add(ratingColumn);
+                }
+
+                // Заполняем оценки
+                foreach (DataGridViewRow row in dgvGames.Rows)
+                {
+                    var gameDto = row.DataBoundItem as GameDto;
+                    if (gameDto?.Reviews != null && gameDto.Reviews.Count > 0)
+                    {
+                        var firstReview = System.Text.Json.JsonSerializer.Deserialize<ReviewDto>(
+                            gameDto.Reviews[0].ToString()!,
+                            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        row.Cells["Оценка"].Value = firstReview?.Rating + "/10";
+                    }
+                    else
+                    {
+                        row.Cells["Оценка"].Value = "—";
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -70,10 +96,37 @@ namespace GameDiary.Frontend
                     coverImageUrl = ""
                 };
 
-                var json = JsonSerializer.Serialize(game);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                await _client.PostAsync(ApiUrl, content);
-                await LoadGames();
+                // Добавляем отзыв с оценкой после создания игры
+
+                var json = System.Text.Json.JsonSerializer.Serialize(game);
+                var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                var response = await _client.PostAsync(ApiUrl, content);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var createdGame = System.Text.Json.JsonSerializer.Deserialize<GameDto>(responseBody,
+                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (createdGame != null && addForm.Rating > 0)
+                {
+                    var review = new
+                    {
+                        gameId = createdGame.Id,
+                        rating = addForm.Rating,
+                        comment = ""
+                    };
+                    var reviewJson = System.Text.Json.JsonSerializer.Serialize(review);
+                    var reviewContent = new System.Net.Http.StringContent(reviewJson,
+                        System.Text.Encoding.UTF8, "application/json");
+
+                    try
+                    {
+                        var reviewResponse = await _client.PostAsync("https://localhost:7064/api/reviews", reviewContent);
+                        var reviewBody = await reviewResponse.Content.ReadAsStringAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ошибка отзыва: " + ex.Message);
+                    }
+                }
             }
         }
 
@@ -141,5 +194,12 @@ namespace GameDiary.Frontend
             public DateTime AddedAt { get; set; }
             public List<object> Reviews { get; set; } = new();
         }
+    }
+    public class ReviewDto
+    {
+        public int Id { get; set; }
+        public int GameId { get; set; }
+        public int Rating { get; set; }
+        public string? Comment { get; set; }
     }
 }
