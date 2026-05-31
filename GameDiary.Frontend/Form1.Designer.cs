@@ -32,6 +32,7 @@
             btnAdd = new Button();
             btnDelete = new Button();
             btnRefresh = new Button();
+            btnEdit = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvGames).BeginInit();
             SuspendLayout();
             // 
@@ -55,7 +56,7 @@
             // 
             // btnDelete
             // 
-            btnDelete.Location = new Point(186, 12);
+            btnDelete.Location = new Point(534, 288);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(75, 23);
             btnDelete.TabIndex = 2;
@@ -65,13 +66,23 @@
             // 
             // btnRefresh
             // 
-            btnRefresh.Location = new Point(267, 12);
+            btnRefresh.Location = new Point(487, 12);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(122, 23);
             btnRefresh.TabIndex = 3;
             btnRefresh.Text = "Обновить список";
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
+            // 
+            // btnEdit
+            // 
+            btnEdit.Location = new Point(186, 12);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(108, 23);
+            btnEdit.TabIndex = 4;
+            btnEdit.Text = "Редактировать";
+            btnEdit.UseVisualStyleBackColor = true;
+            btnEdit.Click += btnEdit_Click;
             // 
             // Form1
             // 
@@ -81,6 +92,7 @@
             Controls.Add(btnRefresh);
             Controls.Add(btnDelete);
             Controls.Add(btnAdd);
+            Controls.Add(btnEdit);
             Controls.Add(dgvGames);
             Name = "Form1";
             Text = "Game Diary";
@@ -95,5 +107,6 @@
         private Button btnAdd;
         private Button btnDelete;
         private Button btnRefresh;
+        private Button btnEdit;
     }
 }

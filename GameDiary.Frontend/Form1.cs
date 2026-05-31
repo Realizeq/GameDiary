@@ -96,17 +96,50 @@ namespace GameDiary.Frontend
                 await LoadGames();
             }
         }
-    }
 
-    // Класс для чтения данных из API
-    public class GameDto
-    {
-        public int Id { get; set; }
-        public string Title { get; set; } = "";
-        public string Platform { get; set; } = "";
-        public string Status { get; set; } = "";
-        public string CoverImageUrl { get; set; } = "";
-        public DateTime AddedAt { get; set; }
-        public List<object> Reviews { get; set; } = new();
+
+
+        private async void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (dgvGames.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Выбери игру для редактирования!");
+                return;
+            }
+
+            var id = (int)dgvGames.SelectedRows[0].Cells["Id"].Value;
+            var title = dgvGames.SelectedRows[0].Cells["Title"].Value.ToString();
+            var platform = dgvGames.SelectedRows[0].Cells["Platform"].Value.ToString();
+            var status = dgvGames.SelectedRows[0].Cells["Status"].Value.ToString();
+
+            var editForm = new EditGameForm(id, title, platform, status);
+            if (editForm.ShowDialog() == DialogResult.OK)
+            {
+                var updated = new
+                {
+                    title = editForm.GameTitle,
+                    platform = editForm.Platform,
+                    status = editForm.Status,
+                    coverImageUrl = ""
+                };
+
+                var json = System.Text.Json.JsonSerializer.Serialize(updated);
+                var content = new System.Net.Http.StringContent(json,
+                    System.Text.Encoding.UTF8, "application/json");
+                await _client.PutAsync(ApiUrl + "/" + id, content);
+                await LoadGames();
+            }
+        }
+        // Класс для чтения данных из API
+        public class GameDto
+        {
+            public int Id { get; set; }
+            public string Title { get; set; } = "";
+            public string Platform { get; set; } = "";
+            public string Status { get; set; } = "";
+            public string CoverImageUrl { get; set; } = "";
+            public DateTime AddedAt { get; set; }
+            public List<object> Reviews { get; set; } = new();
+        }
     }
 }
