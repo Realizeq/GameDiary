@@ -6,12 +6,15 @@ namespace GameDiary.Frontend
 {
     public partial class Form1 : Form
     {
-        private readonly HttpClient _client = new HttpClient();
-        private const string ApiUrl = "https://localhost:7064/api/games";
+        private const string ApiUrl = "http://localhost:5081/api/games";
+        private HttpClient _client;
 
         public Form1()
         {
             InitializeComponent();
+            var handler = new HttpClientHandler();
+            handler.ServerCertificateCustomValidationCallback = (m, c, ch, e) => true;
+            _client = new HttpClient(handler);
             this.BackColor = Color.FromArgb(27, 40, 56);
             this.ForeColor = Color.White;
 
@@ -50,14 +53,87 @@ namespace GameDiary.Frontend
             btnEdit.FlatStyle = FlatStyle.Flat;
             btnEdit.FlatAppearance.BorderSize = 0;
             btnEdit.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            btnStats.BackColor = Color.FromArgb(100, 80, 180);
+            btnStats.ForeColor = Color.White;
+            btnStats.FlatStyle = FlatStyle.Flat;
+            btnStats.FlatAppearance.BorderSize = 0;
+            btnStats.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            pnlStats.BackColor = Color.FromArgb(20, 30, 48);
+            pnlStats.Visible = false;
+
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+
+            this.Paint += (s, e) => {
+                ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle,
+                    Color.FromArgb(60, 80, 100), 1, ButtonBorderStyle.Solid,
+                    Color.FromArgb(60, 80, 100), 1, ButtonBorderStyle.Solid,
+                    Color.FromArgb(60, 80, 100), 1, ButtonBorderStyle.Solid,
+                    Color.FromArgb(60, 80, 100), 1, ButtonBorderStyle.Solid);
+            };
+
+            // Шапка окна
+            var titlePanel = new Panel();
+            titlePanel.Size = new Size(this.ClientSize.Width, 35);
+            titlePanel.Location = new Point(0, 0);
+            titlePanel.BackColor = Color.FromArgb(15, 22, 35);
+            this.Controls.Add(titlePanel);
+
+            var lblTitle = new Label();
+            lblTitle.Text = "🎮 Игровой дневник";
+            lblTitle.ForeColor = Color.White;
+            lblTitle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblTitle.AutoSize = true;
+            lblTitle.Location = new Point(12, 8);
+            lblTitle.BackColor = Color.Transparent;
+            titlePanel.Controls.Add(lblTitle);
+
+            var btnClose = new Button();
+            btnClose.Text = "✕";
+            btnClose.Size = new Size(35, 35);
+            btnClose.Location = new Point(titlePanel.Width - 35, 0);
+            btnClose.FlatStyle = FlatStyle.Flat;
+            btnClose.FlatAppearance.BorderSize = 0;
+            btnClose.BackColor = Color.FromArgb(200, 60, 60);
+            btnClose.ForeColor = Color.White;
+            btnClose.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnClose.Click += (s, e) => {
+                foreach (var process in System.Diagnostics.Process.GetProcessesByName("GameDiary.API"))
+                {
+                    process.Kill();
+                }
+                System.Diagnostics.Process.GetCurrentProcess().Kill();
+            };
+            titlePanel.Controls.Add(btnClose);
+
+            var btnMinimize = new Button();
+            btnMinimize.Text = "─";
+            btnMinimize.Size = new Size(35, 35);
+            btnMinimize.Location = new Point(titlePanel.Width - 75, 0);
+            btnMinimize.FlatStyle = FlatStyle.Flat;
+            btnMinimize.FlatAppearance.BorderSize = 0;
+            btnMinimize.BackColor = Color.FromArgb(15, 22, 35);
+            btnMinimize.ForeColor = Color.White;
+            btnMinimize.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnMinimize.Click += (s, e) => this.WindowState = FormWindowState.Minimized;
+            titlePanel.Controls.Add(btnMinimize);
+
+            // Перетаскивание за шапку
+            bool dragging = false;
+            Point dragStart = Point.Empty;
+            titlePanel.MouseDown += (s, e) => { dragging = true; dragStart = e.Location; };
+            titlePanel.MouseMove += (s, e) => { if (dragging) this.Location = new Point(this.Location.X + e.X - dragStart.X, this.Location.Y + e.Y - dragStart.Y); };
+            titlePanel.MouseUp += (s, e) => dragging = false;
+            lblTitle.MouseDown += (s, e) => { dragging = true; dragStart = e.Location; };
+            lblTitle.MouseMove += (s, e) => { if (dragging) this.Location = new Point(this.Location.X + e.X - dragStart.X, this.Location.Y + e.Y - dragStart.Y); };
+            lblTitle.MouseUp += (s, e) => dragging = false;
 
             this.Font = new Font("Segoe UI", 9);
             this.Text = "Игровой дневник";
-            
-            var handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback = (m, c, ch, e) => true;
-            _client = new HttpClient(handler);
         }
+
+        [System.Runtime.InteropServices.DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
 
         private async void Form1_Load(object sender, EventArgs e)
         {
@@ -74,7 +150,7 @@ namespace GameDiary.Frontend
 
                 dgvGames.DataSource = games;
 
-                if (dgvGames.Columns["Id"] != null) dgvGames.Columns["Id"].HeaderText = "ID";
+                if (dgvGames.Columns["Id"] != null) dgvGames.Columns["Id"].Visible = false;
                 if (dgvGames.Columns["Title"] != null) dgvGames.Columns["Title"].HeaderText = "Название";
                 if (dgvGames.Columns["Platform"] != null) dgvGames.Columns["Platform"].HeaderText = "Платформа";
                 if (dgvGames.Columns["Status"] != null) dgvGames.Columns["Status"].HeaderText = "Статус";
@@ -163,7 +239,7 @@ namespace GameDiary.Frontend
 
                     try
                     {
-                        var reviewResponse = await _client.PutAsync("https://localhost:7064/api/reviews/game/" + createdGame.Id, reviewContent);
+                        var reviewResponse = await _client.PutAsync("http://localhost:5081/api/reviews/game/" + createdGame.Id, reviewContent);
                         var reviewBody = await reviewResponse.Content.ReadAsStringAsync();
                     }
                     catch (Exception ex)
@@ -178,7 +254,7 @@ namespace GameDiary.Frontend
         {
             if (dgvGames.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Выбери игру для удаления!");
+                MessageBox.Show("Выбери игру для удаления");
                 return;
             }
 
@@ -192,6 +268,59 @@ namespace GameDiary.Frontend
                 await LoadGames();
             }
         }
+        private void btnStats_Click(object sender, EventArgs e)
+        {
+            if (pnlStats.Visible)
+            {
+                pnlStats.Visible = false;
+                return;
+            }
+
+            int total = dgvGames.Rows.Count;
+            int done = 0, inProgress = 0, dropped = 0, wishlist = 0;
+
+
+
+            foreach (DataGridViewRow row in dgvGames.Rows)
+            {
+                var status = row.Cells["Status"].Value?.ToString();
+                if (status == "Пройдена") done++;
+                else if (status == "В процессе") inProgress++;
+                else if (status == "Брошена") dropped++;
+                else if (status == "Вишлист") wishlist++;
+
+
+
+                pnlStats.Controls.Clear();
+
+                var items = new (string text, Color color)[]
+                {
+        ($"Всего: {total}", Color.White),
+        ($"Пройдено: {done}", Color.FromArgb(100, 220, 100)),
+        ($"В процессе: {inProgress}", Color.FromArgb(255, 200, 50)),
+        ($"Брошено: {dropped}", Color.FromArgb(220, 80, 80)),
+        ($"Вишлист: {wishlist}", Color.FromArgb(130, 180, 255)),
+                };
+
+                int x = 15;
+                foreach (var item in items)
+                {
+                    var lbl = new Label
+                    {
+                        Text = item.text,
+                        ForeColor = item.color,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                        Location = new Point(x, 28)
+                    };
+                    pnlStats.Controls.Add(lbl);
+                    x += lbl.PreferredWidth + 25;
+                }
+
+                pnlStats.Visible = true;
+            }
+        }
 
 
 
@@ -199,7 +328,7 @@ namespace GameDiary.Frontend
         {
             if (dgvGames.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Выбери игру для редактирования!");
+                MessageBox.Show("Выбери игру для редактирования");
                 return;
             }
 
@@ -239,7 +368,7 @@ namespace GameDiary.Frontend
                 var reviewJson = System.Text.Json.JsonSerializer.Serialize(review);
                 var reviewContent = new System.Net.Http.StringContent(reviewJson,
                     System.Text.Encoding.UTF8, "application/json");
-                await _client.PutAsync("https://localhost:7064/api/reviews/game/" + id, reviewContent);
+                await _client.PutAsync("http://localhost:5081/api/reviews/game/" + id, reviewContent);
 
                 await LoadGames();
             }
@@ -253,6 +382,16 @@ namespace GameDiary.Frontend
             public string CoverImageUrl { get; set; } = "";
             public DateTime AddedAt { get; set; }
             public List<object> Reviews { get; set; } = new();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pnlStats_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
     public class ReviewDto

@@ -45,7 +45,7 @@
             // 
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Location = new Point(12, 47);
+            label1.Location = new Point(12, 85);
             label1.Name = "label1";
             label1.Size = new Size(90, 15);
             label1.TabIndex = 0;
@@ -56,7 +56,7 @@
             // 
             label2.AutoSize = true;
             label2.BackColor = Color.Transparent;
-            label2.Location = new Point(12, 79);
+            label2.Location = new Point(12, 114);
             label2.Name = "label2";
             label2.Size = new Size(72, 15);
             label2.TabIndex = 1;
@@ -67,7 +67,7 @@
             // 
             label3.AutoSize = true;
             label3.BackColor = Color.Transparent;
-            label3.Location = new Point(12, 108);
+            label3.Location = new Point(12, 143);
             label3.Name = "label3";
             label3.Size = new Size(43, 15);
             label3.TabIndex = 2;
@@ -76,7 +76,7 @@
             // 
             // txtTitle
             // 
-            txtTitle.Location = new Point(117, 47);
+            txtTitle.Location = new Point(117, 85);
             txtTitle.Name = "txtTitle";
             txtTitle.Size = new Size(320, 23);
             txtTitle.TabIndex = 3;
@@ -84,7 +84,7 @@
             // cmbPlatform
             // 
             cmbPlatform.FormattingEnabled = true;
-            cmbPlatform.Location = new Point(117, 76);
+            cmbPlatform.Location = new Point(117, 111);
             cmbPlatform.Name = "cmbPlatform";
             cmbPlatform.Size = new Size(184, 23);
             cmbPlatform.TabIndex = 4;
@@ -92,14 +92,14 @@
             // cmbStatus
             // 
             cmbStatus.FormattingEnabled = true;
-            cmbStatus.Location = new Point(117, 105);
+            cmbStatus.Location = new Point(117, 140);
             cmbStatus.Name = "cmbStatus";
             cmbStatus.Size = new Size(184, 23);
             cmbStatus.TabIndex = 5;
             // 
             // btnOk
             // 
-            btnOk.Location = new Point(487, 111);
+            btnOk.Location = new Point(487, 146);
             btnOk.Name = "btnOk";
             btnOk.Size = new Size(75, 23);
             btnOk.TabIndex = 6;
@@ -109,7 +109,7 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(487, 140);
+            btnCancel.Location = new Point(487, 175);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 23);
             btnCancel.TabIndex = 7;
@@ -121,7 +121,7 @@
             // 
             label4.AutoSize = true;
             label4.BackColor = Color.Transparent;
-            label4.Location = new Point(12, 140);
+            label4.Location = new Point(12, 175);
             label4.Name = "label4";
             label4.Size = new Size(82, 15);
             label4.TabIndex = 8;
@@ -130,7 +130,7 @@
             // 
             // nudRating
             // 
-            nudRating.Location = new Point(117, 138);
+            nudRating.Location = new Point(117, 173);
             nudRating.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
             nudRating.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudRating.Name = "nudRating";
@@ -153,8 +153,10 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "AddGameForm";
             Text = "Добавление игры";
+            Load += AddGameForm_Load;
             ((System.ComponentModel.ISupportInitialize)nudRating).EndInit();
             ResumeLayout(false);
             PerformLayout();

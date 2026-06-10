@@ -33,6 +33,8 @@
             btnDelete = new Button();
             btnRefresh = new Button();
             btnEdit = new Button();
+            pnlStats = new Panel();
+            btnStats = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvGames).BeginInit();
             SuspendLayout();
             // 
@@ -41,7 +43,7 @@
             dgvGames.BackgroundColor = Color.FromArgb(27, 40, 56);
             dgvGames.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvGames.GridColor = Color.White;
-            dgvGames.Location = new Point(12, 41);
+            dgvGames.Location = new Point(12, 76);
             dgvGames.Name = "dgvGames";
             dgvGames.Size = new Size(679, 241);
             dgvGames.TabIndex = 0;
@@ -49,7 +51,7 @@
             // btnAdd
             // 
             btnAdd.BackColor = Color.LightBlue;
-            btnAdd.Location = new Point(12, 12);
+            btnAdd.Location = new Point(12, 47);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(168, 23);
             btnAdd.TabIndex = 1;
@@ -59,7 +61,7 @@
             // 
             // btnDelete
             // 
-            btnDelete.Location = new Point(616, 288);
+            btnDelete.Location = new Point(616, 323);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(75, 23);
             btnDelete.TabIndex = 2;
@@ -69,7 +71,7 @@
             // 
             // btnRefresh
             // 
-            btnRefresh.Location = new Point(569, 12);
+            btnRefresh.Location = new Point(569, 47);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(122, 23);
             btnRefresh.TabIndex = 3;
@@ -80,7 +82,7 @@
             // btnEdit
             // 
             btnEdit.BackColor = Color.LightBlue;
-            btnEdit.Location = new Point(186, 12);
+            btnEdit.Location = new Point(186, 47);
             btnEdit.Name = "btnEdit";
             btnEdit.Size = new Size(108, 23);
             btnEdit.TabIndex = 4;
@@ -88,19 +90,42 @@
             btnEdit.UseVisualStyleBackColor = false;
             btnEdit.Click += btnEdit_Click;
             // 
+            // pnlStats
+            // 
+            pnlStats.Dock = DockStyle.Bottom;
+            pnlStats.Location = new Point(0, 296);
+            pnlStats.Name = "pnlStats";
+            pnlStats.Size = new Size(804, 70);
+            pnlStats.TabIndex = 0;
+            pnlStats.Visible = false;
+            // 
+            // btnStats
+            // 
+            btnStats.Location = new Point(370, 47);
+            btnStats.Name = "btnStats";
+            btnStats.Size = new Size(120, 23);
+            btnStats.TabIndex = 5;
+            btnStats.Text = "Статистика";
+            btnStats.UseVisualStyleBackColor = true;
+            btnStats.Click += btnStats_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(27, 40, 56);
             BackgroundImageLayout = ImageLayout.None;
-            ClientSize = new Size(734, 321);
+            ClientSize = new Size(804, 370);
+            Controls.Add(pnlStats);
             Controls.Add(btnRefresh);
             Controls.Add(btnDelete);
             Controls.Add(btnAdd);
             Controls.Add(btnEdit);
+            Controls.Add(btnStats);
             Controls.Add(dgvGames);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Игровой дневник";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dgvGames).EndInit();
@@ -114,5 +139,7 @@
         private Button btnDelete;
         private Button btnRefresh;
         private Button btnEdit;
+        private Panel pnlStats;
+        private Button btnStats;
     }
 }

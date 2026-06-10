@@ -10,6 +10,41 @@
         public AddGameForm()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+
+            var titlePanel = new Panel();
+            titlePanel.Size = new Size(this.ClientSize.Width, 35);
+            titlePanel.Location = new Point(0, 0);
+            titlePanel.BackColor = Color.FromArgb(15, 22, 35);
+            this.Controls.Add(titlePanel);
+
+            var lblTitle = new Label();
+            lblTitle.Text = "➕ Добавление игры";
+            lblTitle.ForeColor = Color.White;
+            lblTitle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblTitle.AutoSize = true;
+            lblTitle.Location = new Point(12, 8);
+            lblTitle.BackColor = Color.Transparent;
+            titlePanel.Controls.Add(lblTitle);
+
+            var btnClose = new Button();
+            btnClose.Text = "✕";
+            btnClose.Size = new Size(35, 35);
+            btnClose.Location = new Point(this.ClientSize.Width - 35, 0);
+            btnClose.FlatStyle = FlatStyle.Flat;
+            btnClose.FlatAppearance.BorderSize = 0;
+            btnClose.BackColor = Color.FromArgb(200, 60, 60);
+            btnClose.ForeColor = Color.White;
+            btnClose.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnClose.Click += (s, e) => { DialogResult = DialogResult.Cancel; Close(); };
+            titlePanel.Controls.Add(btnClose);
+
+            bool dragging = false;
+            Point dragStart = Point.Empty;
+            titlePanel.MouseDown += (s, e) => { dragging = true; dragStart = e.Location; };
+            titlePanel.MouseMove += (s, e) => { if (dragging) this.Location = new Point(this.Location.X + e.X - dragStart.X, this.Location.Y + e.Y - dragStart.Y); };
+            titlePanel.MouseUp += (s, e) => dragging = false;
             this.BackColor = Color.FromArgb(27, 40, 56);
             this.ForeColor = Color.White;
             this.Text = "Добавление игры";
@@ -55,7 +90,8 @@
             cmbStatus.Items.AddRange(new[] { "В процессе", "Пройдена", "Брошена", "Вишлист" });
             cmbStatus.SelectedIndex = 0;
         }
-
+        [System.Runtime.InteropServices.DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtTitle.Text))
@@ -105,6 +141,11 @@
         }
 
         private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AddGameForm_Load(object sender, EventArgs e)
         {
 
         }

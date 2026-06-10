@@ -10,6 +10,42 @@
         public EditGameForm(int id, string title, string platform, string status, int rating)
         {
             InitializeComponent();
+
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+
+            var titlePanel = new Panel();
+            titlePanel.Size = new Size(this.ClientSize.Width, 35);
+            titlePanel.Location = new Point(0, 0);
+            titlePanel.BackColor = Color.FromArgb(15, 22, 35);
+            this.Controls.Add(titlePanel);
+
+            var lblTitle = new Label();
+            lblTitle.Text = "✏️ Редактирование игры";
+            lblTitle.ForeColor = Color.White;
+            lblTitle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblTitle.AutoSize = true;
+            lblTitle.Location = new Point(12, 8);
+            lblTitle.BackColor = Color.Transparent;
+            titlePanel.Controls.Add(lblTitle);
+
+            var btnCloseForm = new Button();
+            btnCloseForm.Text = "✕";
+            btnCloseForm.Size = new Size(35, 35);
+            btnCloseForm.Location = new Point(this.ClientSize.Width - 35, 0);
+            btnCloseForm.FlatStyle = FlatStyle.Flat;
+            btnCloseForm.FlatAppearance.BorderSize = 0;
+            btnCloseForm.BackColor = Color.FromArgb(200, 60, 60);
+            btnCloseForm.ForeColor = Color.White;
+            btnCloseForm.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnCloseForm.Click += (s, e) => { DialogResult = DialogResult.Cancel; Close(); };
+            titlePanel.Controls.Add(btnCloseForm);
+
+            bool dragging = false;
+            Point dragStart = Point.Empty;
+            titlePanel.MouseDown += (s, e) => { dragging = true; dragStart = e.Location; };
+            titlePanel.MouseMove += (s, e) => { if (dragging) this.Location = new Point(this.Location.X + e.X - dragStart.X, this.Location.Y + e.Y - dragStart.Y); };
+            titlePanel.MouseUp += (s, e) => dragging = false;
             this.BackColor = Color.FromArgb(27, 40, 56);
             this.ForeColor = Color.White;
             this.Text = "Редактирование игры";
@@ -57,6 +93,8 @@
             cmbStatus.SelectedItem = status;
             nudRating.Value = rating;
         }
+        [System.Runtime.InteropServices.DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
 
         private void btnSave_Click(object sender, EventArgs e)
         {
